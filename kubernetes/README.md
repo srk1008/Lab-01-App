@@ -13,6 +13,7 @@ kubectl get pods
 kubectl get services
 kubectl get pods -n default
 kubectl get pods -n kube-system
+kubectl scale --replicas=2 deployment backend -n default
 
 http://node-ip:30000 # react app
 http://node-ip:30001 # express api

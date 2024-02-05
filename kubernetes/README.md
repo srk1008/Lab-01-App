@@ -13,7 +13,7 @@ kubectl get pods
 kubectl get services
 kubectl get pods -n default
 kubectl get pods -n kube-system
-kubectl scale --replicas=2 deployment backend -n default
+kubectl scale --replicas=1 deployment backend -n default
 
 kubectl delete deploy frontend -n default
 kubectl delete deploy backend -n default
@@ -55,6 +55,7 @@ kubectl describe ingress my-ingress
   helm upgrade --install ingress-nginx ingress-nginx  --repo https://kubernetes.github.io/ingress-nginx   --namespace ingress-nginx -create-namespace
 #deploy a pod containing nginx xontroller
 kubectl apply -f https://raw.githubusercontent.com/kubernetes/ingress-nginx/controller-v1.8.2/deploy/static/provider/cloud/deploy.yaml
+
 kubectl get pods --namespace=ingress-nginx
 kubectl get svc -n ingress-nginx
 #because we dont have loadbalancer in local env, port forword

@@ -28,7 +28,7 @@ kubectl apply -f https://raw.githubusercontent.com/kubernetes/dashboard/v2.7.0/a
 kubectl get pods -n kubernetes-dashboard
 kubectl proxy
 kubectl -n kubernetes-dashboard create token admin-user
-eyJhbGciOiJSUzI1NiIsImtpZCI6IjdoWWpxQno5c1FIRV85d3FLcjVtRUw3dFhZaXJ1MXItQUxmRzNlSlVHTTgifQ.eyJhdWQiOlsiaHR0cHM6Ly9rdWJlcm5ldGVzLmRlZmF1bHQuc3ZjLmNsdXN0ZXIubG9jYWwiXSwiZXhwIjoxNzA3MDYxNTc4LCJpYXQiOjE3MDcwNTc5NzgsImlzcyI6Imh0dHBzOi8va3ViZXJuZXRlcy5kZWZhdWx0LnN2Yy5jbHVzdGVyLmxvY2FsIiwia3ViZXJuZXRlcy5pbyI6eyJuYW1lc3BhY2UiOiJrdWJlcm5ldGVzLWRhc2hib2FyZCIsInNlcnZpY2VhY2NvdW50Ijp7Im5hbWUiOiJhZG1pbi11c2VyIiwidWlkIjoiZmI2NzM5OTMtN2IzNi00NTMyLTg4ZTItYzQ2OTc3ZjUyZDVlIn19LCJuYmYiOjE3MDcwNTc5NzgsInN1YiI6InN5c3RlbTpzZXJ2aWNlYWNjb3VudDprdWJlcm5ldGVzLWRhc2hib2FyZDphZG1pbi11c2VyIn0.ExslrtTDcWyTubVYZukgXoBp--91uK542tEq8JtOsILttw3OVJ5ZVWInzPkTse1TdA4U6dPIEdDRAPlEvaPDPJT2RQ4pBXK2uxGdMm7I8U-rI1Z5t8Th5ECzVszzd8YQZJehi5BVopiBdGDVt0aVroOzClTq_4oxnDfUScgS1AmQ73FhqaJ7yJatwCtoyvpaM8j9xQSpfExCZR3gybwnupJQ2JKYaHcbhrYnGnZZyAGk5TlLnrEazsCa9DiY08meBpWDysJztyzgP2npQEKRnx1YT6msCew-Sd4LLeDalHEOQzEM0b2FQb8pEbBVFUItA2xUXlEc-hXf5LH5KnuBFQ
+
 
 ----how to expose service to internet
 There are different ways to expose your Kubernetes service to the internet, depending on your needs and preferences. Here are some common methods:
@@ -43,19 +43,23 @@ kubectl apply -f ks8-service-account-deployment.yaml
 
 
 #create an Ingress resource
-    kubectl apply -f ks8-ingress-controller.yaml
+  kubectl apply -f ingress.yaml
+#install ingress implementation (istio,NgiNX etc.)
 #deploy an Ingress controller. The Ingress controller is responsible for implementing the rules set in your Ingress resource.
- deploy an Istio Ingress Gateway pod to handle the Ingress rules
-    Deploy Istio Gateway and VirtualService:
+  deploy an Istio Ingress Gateway pod to handle the Ingress rules. Deploy Istio Gateway and VirtualService:
 
 kubectl describe ingress my-ingress
 
-#install helm and add PATh variable
-helm upgrade --install ingress-nginx ingress-nginx \
-  --repo https://kubernetes.github.io/ingress-nginx \
-  --namespace ingress-nginx --create-namespace
-
+#download helm from official site and extract it on local machine, add PATh variable
+#install one of the ingress implementation ngnix ingress controller, can install istio too
+  helm upgrade --install ingress-nginx ingress-nginx  --repo https://kubernetes.github.io/ingress-nginx   --namespace ingress-nginx -create-namespace
+#deploy a pod containing nginx xontroller
 kubectl apply -f https://raw.githubusercontent.com/kubernetes/ingress-nginx/controller-v1.8.2/deploy/static/provider/cloud/deploy.yaml
 kubectl get pods --namespace=ingress-nginx
+kubectl get svc -n ingress-nginx
+#because we dont have loadbalancer in local env, port forword
+kubectl -n ingress-nginx port-forward svc/ingress-nginx-controller 8080:80
+  another e.g. kubectl -n default port-forward svc/backend-service 3000:3000 #forward local host :3000 to service :3000
+http://localhost:8080
 
-helm upgrade --install ingress-nginx ingress-nginx --repo https://kubernetes.github.io/ingress-nginx \ --namespace ingress-nginx --create-namespace
+kubectl -n ingress-nginx logs -l app.kubernetes.io/instance=ingress-nginx

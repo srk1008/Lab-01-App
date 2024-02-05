@@ -4,9 +4,12 @@ metadata:
   name: my-ingress
   #annotations:
   #  kubernetes.io/ingress.class: "istio"  # Use the Istio Ingress class
+  annotations:
+    ingress.kubernetes.io/rewrite-target: /
 spec:
-  ingressClassName: nginx-example
+  ingressClassName: nginx
   rules:
+  #-host:mydomain.com
   - http:
       paths:
       - path: /frontend
@@ -22,4 +25,4 @@ spec:
           service:
             name: backend-service
             port:
-              number: 80
+              number: 3000

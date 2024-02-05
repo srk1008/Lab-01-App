@@ -4,13 +4,13 @@ metadata:
   name: frontend-service
   namespace: default
 spec:
-  type: NodePort
+  #type: NodePort
   selector:
     app: frontend
   ports:
   - port: 80 #specifies the port that the service exposes to the cluster.This port is used by other pods or services to access the service.
     targetPort: 80 #specifies the port that the service forwards the traffic to on the pod. The targetPort can be either a number or a name, and it defaults to the same value as the port.
-    nodePort: 30000 #specifies the port that the service exposes to the outside world. This port is allocated from a range of ports (default 30000-32767) on each node, and it allows external clients to access the service.
+    #nodePort: 30000 #specifies the port that the service exposes to the outside world. This port is allocated from a range of ports (default 30000-32767) on each node, and it allows external clients to access the service.
 
 #The containerPort in the deployment file must match the targetPort in the service file, so that the service can route the traffic to the correct port on the pod.
 #The port in the service file can be any valid port number, and it does not have to match the containerPort or the targetPort. However, it is recommended to use the same port number as the containerPort for consistency and clarity.
